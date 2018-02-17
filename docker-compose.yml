@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+
+  postgres:
+    image: ruleoftech/vehicledata-db:latest
+    ports:
+      - "5432:5432"
