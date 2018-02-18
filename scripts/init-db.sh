@@ -52,7 +52,7 @@ CREATE TABLE tekniset_tiedot (
   kunta varchar(255),
   co2 integer,
   matkamittarilukema integer,
-  alue integer,
+  alue varchar(255),
   valmistenumero2 varchar(255),
   jarnro BIGINT NOT NULL PRIMARY KEY UNIQUE
 );
