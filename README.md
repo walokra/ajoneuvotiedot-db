@@ -47,21 +47,14 @@ vehicledata=> \i sql/tekniset_tiedot_view.sql
 
 ##### Vehicles data
 
-Before you can import the technical data version 5.1
-
-1. Change the field separator because there are decimals in the data. The field separator , is changed to |.
+1. Convert to UTF-8
 ```
-$ awk 'BEGIN{FS=OFS="\""} {for (i=1;i<=NF;i+=2) gsub(/,/,"|",$i)}1' data.csv > data_clean.csv
+$ iconv -f iso8859-15 -t utf8 data.csv > data_utf8.csv
 ```
 
-2. Convert to UTF-8
+2. Connect to PostgreSQL and import data
 ```
-$ iconv -f iso8859-15 -t utf8 data_clean.csv > data_utf8.csv
-```
-
-3. Connect to PostgreSQL and import data
-```
-vehicledata=# \COPY tekniset_tiedot FROM 'data_utf8.csv' CSV HEADER DELIMITER '|';
+vehicledata=# \COPY tekniset_tiedot FROM 'data_utf8.csv' CSV HEADER DELIMITER ';';
 ```
 
 ##### Codesystem
@@ -72,7 +65,7 @@ TBD: The codesystem data can be imported to the database as is:
 
 2. Connect to PostgreSQL and import data
 ```
-vehicledata=# \COPY koodisto FROM 'koodisto.csv' CSV HEADER DELIMITER ',';
+vehicledata=# \COPY koodisto FROM 'koodisto.csv' CSV HEADER DELIMITER ';';
 ```
 
 ## Running the application
