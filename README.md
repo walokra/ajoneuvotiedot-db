@@ -55,6 +55,9 @@ $ iconv -f iso8859-15 -t utf8 data.csv > data_utf8.csv
 2. Connect to PostgreSQL and import data
 ```
 vehicledata=# \COPY tekniset_tiedot FROM 'data_utf8.csv' CSV HEADER DELIMITER ';';
+
+or from container cmd line
+$ psql -U vehicledata -d vehicledata -c "\COPY tekniset_tiedot FROM 'data_utf8.csv' CSV HEADER DELIMITER ';';"
 ```
 
 ##### Codesystem
