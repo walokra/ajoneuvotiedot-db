@@ -1,0 +1,30 @@
+---
+  - name: copy scripts
+    shell: docker cp {{ code_table_sql }} {{ data_table_sql }} {{ data_view_sql }} /tmp/sql/
+
+  - name: create code table
+    become: yes
+    become_method: su
+    become_user: postgres
+    command: psql -c "\i {{ code_table_sql }}"
+    environment:
+      PGUSER: "{{ db_user }}"
+      PGDATABASE: "{{ db_name }}"
+      PGPASSWORD: "{{ db_password }}"
+
+  - name: create data table
+    command: psql -c "\i {{ data_table_sql }}"
+
+  - name: create data view
+    command: psql -c "\i {{ data_view_sql }}"
+
+  - name: unarchive data
+    unarchive: src={{ data_zip }} dest=/tmp
+    become: yes
+    become_method: su
+
+  - name: convert data
+    shell: iconv -f iso8859-15 -t utf-8 {{ data_import }} > data_utf8.csv
+
+  - name: import data
+    command: psql -U {{ dbuser }} -d {{ dbname }} -c "\COPY tekniset_tiedot FROM 'data_utf8.csv' CSV HEADER DELIMITER ';';"

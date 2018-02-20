@@ -1,0 +1,19 @@
+---
+- hosts: all
+  become: yes
+  become_method: su
+  gather_facts: false
+  vars:
+    db_name: vehicledata
+    db_user: vehicledata
+    db_password: vehicledata
+    locale: en_US.utf8
+    data_zip: data/180117_tieliikenne_5_1.zip
+    data_import: data.csv
+    code_table_sql: sql/koodisto.sql
+    data_table_sql: sql/tekniset_tiedot.sql
+    data_view_sql: sql/tekniset_tiedot_view.sql
+    data_script: convert-data.sh
+
+  tasks:
+    - import_tasks: init-db.yml

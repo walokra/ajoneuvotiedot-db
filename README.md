@@ -18,7 +18,7 @@ $ docker-compose up
 
 Required software on macOS.
 
-### Using PostgreSQL on Docker
+## Using PostgreSQL on Docker
 
 psql access:
 ```
@@ -27,7 +27,7 @@ $ docker run --name vehicledata-db -e POSTGRES_PASSWORD=vehicledata -e POSTGRES_
 $ docker exec -it vehicledata-db psql
 ```
 
-#### Importing data
+## Importing data
 
 You can also use the following to import the data manually.
 Here we are using PostgreSQL where we have done vehicledata database and user.
@@ -45,7 +45,7 @@ vehicledata=> \i sql/tekniset_tiedot.sql
 vehicledata=> \i sql/tekniset_tiedot_view.sql
 ```
 
-##### Vehicles data
+### Vehicles data
 
 1. Convert to UTF-8
 ```
@@ -60,15 +60,20 @@ or from container cmd line
 $ psql -U vehicledata -d vehicledata -c "\COPY tekniset_tiedot FROM 'data_utf8.csv' CSV HEADER DELIMITER ';';"
 ```
 
-##### Codesystem
+### Codesystem
 
-TBD: The codesystem data can be imported to the database as is:
+The codesystem data can be imported to the database as is:
 
-1. Save the xlsx-file to CSV
+1. Hassle with the open data and combine all codes to CSV
+
+2. Convert to UTF-8
+```
+$ iconv -f iso8859-15 -t utf8 koodisto.csv > koodisto_utf8.csv
+```
 
 2. Connect to PostgreSQL and import data
 ```
-vehicledata=# \COPY koodisto FROM 'koodisto.csv' CSV HEADER DELIMITER ';';
+vehicledata=# \COPY koodisto FROM 'koodisto_utf8.csv' CSV HEADER DELIMITER ';';
 ```
 
 ## Running the application
