@@ -7,7 +7,7 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: vehicledata
+      POSTGRES_USER: postgres
+      #POSTGRES_PASSWORD: postgres
       POSTGRES_DB: vehicledata
-      POSTGRES_PASSWORD: vehicledata
       SEED_DATABASE: "true"

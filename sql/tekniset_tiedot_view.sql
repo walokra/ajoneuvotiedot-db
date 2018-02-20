@@ -2,29 +2,49 @@ DROP VIEW IF EXISTS tekniset_tiedot_view;
 CREATE VIEW tekniset_tiedot_view AS
   SELECT
     jarnro,
-    (SELECT lyhytselite_fi
-     FROM koodisto
-     WHERE koodintunnus = ajoneuvoluokka AND koodisto = 'ajoneuvoluokka')            AS ajoneuvoluokka,
+    ajoneuvoluokka,
+    COALESCE((SELECT lyhytselite_fi
+              FROM koodisto
+              WHERE koodisto = 'ajoneuvoluokka' AND koodintunnus = ajoneuvoluokka),
+             ajoneuvoluokka)            AS ajoneuvoluokkaselite,
     ensirekisterointipvm,
-    (SELECT pitkaselite_fi
-     FROM koodisto
-     WHERE koodintunnus = ajoneuvoryhma :: TEXT AND koodisto = 'ajoneuvoryhma')      AS ajoneuvoryhma,
-    (SELECT lyhytselite_fi
-     FROM koodisto
-     WHERE koodintunnus = ajoneuvonkaytto AND koodisto = 'ajoneuvonkaytto')          AS ajoneuvonkaytto,
+
+    ajoneuvoryhma,
+    COALESCE((SELECT pitkaselite_fi
+              FROM koodisto
+              WHERE koodisto = 'ajoneuvoryhma' AND koodintunnus = ajoneuvoryhma :: TEXT),
+             ajoneuvoryhma :: TEXT)             AS ajoneuvoryhmaselite,
+
+    ajoneuvonkaytto,
+    COALESCE((SELECT lyhytselite_fi
+              FROM koodisto
+              WHERE koodisto = 'ajoneuvonkaytto' AND koodintunnus = ajoneuvonkaytto),
+             ajoneuvonkaytto)           AS ajoneuvonkayttoselite,
+
     variantti,
     versio,
     kayttoonottopvm,
-    (SELECT lyhytselite_fi
-     FROM koodisto
-     WHERE koodintunnus = vari AND koodisto = 'vari')                                AS vari,
+
+    vari,
+    COALESCE((SELECT lyhytselite_fi
+              FROM koodisto
+              WHERE koodisto = 'vari' AND koodintunnus = vari),
+             vari)                      AS variselite,
+
     ovienLukumaara,
-    (SELECT pitkaselite_fi
-     FROM koodisto
-     WHERE koodintunnus = korityyppi AND koodisto = 'korityyppi')                    AS korityyppi,
-    (SELECT lyhytselite_fi
-     FROM koodisto
-     WHERE koodintunnus = ohjaamotyyppi :: TEXT AND koodisto = 'ohjaamotyyppi')      AS ohjaamotyyppi,
+
+    korityyppi,
+    COALESCE((SELECT pitkaselite_fi
+              FROM koodisto
+              WHERE koodisto = 'korityyppi' AND koodintunnus = korityyppi),
+             korityyppi)                AS korityyppiselite,
+
+    ohjaamotyyppi,
+    COALESCE((SELECT lyhytselite_fi
+              FROM koodisto
+              WHERE koodisto = 'ohjaamotyyppi' AND koodintunnus = ohjaamotyyppi :: TEXT),
+             ohjaamotyyppi :: TEXT)             AS ohjaamotyyppiselite,
+
     istumapaikkojenLkm,
     omamassa,
     teknSuurSallKokmassa,
@@ -32,9 +52,13 @@ CREATE VIEW tekniset_tiedot_view AS
     ajonKokPituus,
     ajonLeveys,
     ajonKorkeus,
-    (SELECT lyhytselite_fi
-     FROM koodisto
-     WHERE koodintunnus = kayttovoima AND koodisto = 'kayttovoima')                  AS kayttovoima,
+
+    kayttovoima,
+    COALESCE((SELECT lyhytselite_fi
+              FROM koodisto
+              WHERE koodisto = 'kayttovoima' AND koodintunnus = kayttovoima),
+             kayttovoima)               AS kayttovoimaselite,
+
     iskutilavuus,
     suurinNettoteho,
     sylintereidenLkm,
@@ -45,15 +69,22 @@ CREATE VIEW tekniset_tiedot_view AS
     vaihteisto,
     vaihteidenLkm,
     kaupallinenNimi,
-    (SELECT lyhytselite_fi
-     FROM koodisto
-     WHERE koodintunnus = voimanvalJaTehostamistapa AND koodisto =
-                                                        'voimanvalJaTehostamistapa') AS voimanvalJaTehostamistapa,
+
+    voimanvalJaTehostamistapa,
+    COALESCE((SELECT lyhytselite_fi
+              FROM koodisto
+              WHERE koodisto = 'voimanvalJaTehostamistapa' AND koodintunnus = voimanvalJaTehostamistapa),
+             voimanvalJaTehostamistapa) AS voimanvalJaTehostamistapaselite,
+
     tyyppihyvaksyntanro,
     yksittaisKayttovoima,
-    (SELECT pitkaselite_fi
-     FROM koodisto
-     WHERE koodintunnus = kunta AND koodisto = 'kunta')                              AS kunta,
+
+    kunta,
+    COALESCE((SELECT pitkaselite_fi
+              FROM koodisto
+              WHERE koodisto = 'kunta' AND koodintunnus = kunta),
+             kunta)                     AS kuntaselite,
+
     Co2,
     matkamittarilukema,
     alue,
@@ -65,29 +96,49 @@ DROP MATERIALIZED VIEW IF EXISTS tekniset_tiedot_mat_view;
 CREATE MATERIALIZED VIEW tekniset_tiedot_mat_view AS
   SELECT
     jarnro,
-    (SELECT lyhytselite_fi
-     FROM koodisto
-     WHERE koodintunnus = ajoneuvoluokka AND koodisto = 'ajoneuvoluokka')            AS ajoneuvoluokka,
+    ajoneuvoluokka,
+    COALESCE((SELECT lyhytselite_fi
+              FROM koodisto
+              WHERE koodisto = 'ajoneuvoluokka' AND koodintunnus = ajoneuvoluokka),
+             ajoneuvoluokka)            AS ajoneuvoluokkaselite,
     ensirekisterointipvm,
-    (SELECT pitkaselite_fi
-     FROM koodisto
-     WHERE koodintunnus = ajoneuvoryhma :: TEXT AND koodisto = 'ajoneuvoryhma')      AS ajoneuvoryhma,
-    (SELECT lyhytselite_fi
-     FROM koodisto
-     WHERE koodintunnus = ajoneuvonkaytto AND koodisto = 'ajoneuvonkaytto')          AS ajoneuvonkaytto,
+
+    ajoneuvoryhma,
+    COALESCE((SELECT pitkaselite_fi
+              FROM koodisto
+              WHERE koodisto = 'ajoneuvoryhma' AND koodintunnus = ajoneuvoryhma :: TEXT),
+             ajoneuvoryhma :: TEXT)             AS ajoneuvoryhmaselite,
+
+    ajoneuvonkaytto,
+    COALESCE((SELECT lyhytselite_fi
+              FROM koodisto
+              WHERE koodisto = 'ajoneuvonkaytto' AND koodintunnus = ajoneuvonkaytto),
+             ajoneuvonkaytto)           AS ajoneuvonkayttoselite,
+
     variantti,
     versio,
     kayttoonottopvm,
-    (SELECT lyhytselite_fi
-     FROM koodisto
-     WHERE koodintunnus = vari AND koodisto = 'vari')                                AS vari,
+
+    vari,
+    COALESCE((SELECT lyhytselite_fi
+              FROM koodisto
+              WHERE koodisto = 'vari' AND koodintunnus = vari),
+             vari)                      AS variselite,
+
     ovienLukumaara,
-    (SELECT pitkaselite_fi
-     FROM koodisto
-     WHERE koodintunnus = korityyppi AND koodisto = 'korityyppi')                    AS korityyppi,
-    (SELECT lyhytselite_fi
-     FROM koodisto
-     WHERE koodintunnus = ohjaamotyyppi :: TEXT AND koodisto = 'ohjaamotyyppi')      AS ohjaamotyyppi,
+
+    korityyppi,
+    COALESCE((SELECT pitkaselite_fi
+              FROM koodisto
+              WHERE koodisto = 'korityyppi' AND koodintunnus = korityyppi),
+             korityyppi)                AS korityyppiselite,
+
+    ohjaamotyyppi,
+    COALESCE((SELECT lyhytselite_fi
+              FROM koodisto
+              WHERE koodisto = 'ohjaamotyyppi' AND koodintunnus = ohjaamotyyppi :: TEXT),
+             ohjaamotyyppi :: TEXT)             AS ohjaamotyyppiselite,
+
     istumapaikkojenLkm,
     omamassa,
     teknSuurSallKokmassa,
@@ -95,9 +146,13 @@ CREATE MATERIALIZED VIEW tekniset_tiedot_mat_view AS
     ajonKokPituus,
     ajonLeveys,
     ajonKorkeus,
-    (SELECT lyhytselite_fi
-     FROM koodisto
-     WHERE koodintunnus = kayttovoima AND koodisto = 'kayttovoima')                  AS kayttovoima,
+
+    kayttovoima,
+    COALESCE((SELECT lyhytselite_fi
+              FROM koodisto
+              WHERE koodisto = 'kayttovoima' AND koodintunnus = kayttovoima),
+             kayttovoima)               AS kayttovoimaselite,
+
     iskutilavuus,
     suurinNettoteho,
     sylintereidenLkm,
@@ -108,15 +163,22 @@ CREATE MATERIALIZED VIEW tekniset_tiedot_mat_view AS
     vaihteisto,
     vaihteidenLkm,
     kaupallinenNimi,
-    (SELECT lyhytselite_fi
-     FROM koodisto
-     WHERE koodintunnus = voimanvalJaTehostamistapa AND koodisto =
-                                                        'voimanvalJaTehostamistapa') AS voimanvalJaTehostamistapa,
+
+    voimanvalJaTehostamistapa,
+    COALESCE((SELECT lyhytselite_fi
+              FROM koodisto
+              WHERE koodisto = 'voimanvalJaTehostamistapa' AND koodintunnus = voimanvalJaTehostamistapa),
+             voimanvalJaTehostamistapa) AS voimanvalJaTehostamistapaselite,
+
     tyyppihyvaksyntanro,
     yksittaisKayttovoima,
-    (SELECT pitkaselite_fi
-     FROM koodisto
-     WHERE koodintunnus = kunta AND koodisto = 'kunta')                              AS kunta,
+
+    kunta,
+    COALESCE((SELECT pitkaselite_fi
+              FROM koodisto
+              WHERE koodisto = 'kunta' AND koodintunnus = kunta),
+             kunta)                     AS kuntaselite,
+
     Co2,
     matkamittarilukema,
     alue,
