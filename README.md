@@ -1,6 +1,16 @@
 # ajoneuvotiedot-db
 
-Database of Finnish TraFi's "vehicle technical information" open data.
+Docker image for importing TraFi's "vehicle technical information" open data to PostgreSQL database and creating some views.
+
+Uses TraFi's "vehicle technical information" open data, version 5.1, which covers details on vehicle registration, 
+approval and also on technical data for all vehicles in road traffic, extracted from the Vehicular and Driver Data Register maintained by Trafi.
+
+- Total of 4 997 966 lines
+- The data is dated: 1.1.2018
+- The date of publication: 18.1.2018
+- File format is: ZIP-packed CSV
+- File size: 845 MB (241 MB when packed)
+- Open data has been licensed under the Creative Commons Nimeä 4.0 International license.
 
 ## Technology
 
@@ -8,9 +18,12 @@ Database of Finnish TraFi's "vehicle technical information" open data.
 
 ## Setting up environment
 
-Project has Docker and scripts for setting up things and importing data.
+Project has Docker and scripts for setting up things and importing data. 
+
+Build the docker image with script and then on docker start the data is imported to the database.
 
 ```
+$ ./build.sh
 $ docker-compose up
 ```
 
@@ -66,17 +79,12 @@ The codesystem data can be imported to the database as is:
 
 1. Hassle with the open data and combine all codes to CSV
 
-2. Convert to UTF-8
-```
-$ iconv -f iso8859-15 -t utf8 koodisto.csv > koodisto_utf8.csv
-```
-
 2. Connect to PostgreSQL and import data
 ```
-vehicledata=# \COPY koodisto FROM 'koodisto_utf8.csv' CSV HEADER DELIMITER ';';
+vehicledata=# \COPY koodisto FROM 'koodisto.csv' CSV HEADER DELIMITER ';';
 ```
 
-## Running the application
+## Running the database
 
 ```
 $ docker-compose up
@@ -84,10 +92,11 @@ $ docker-compose up
 
 ## TraFi open data
 
-TraFi's open data of vehicle information can be found from http://www.trafi.fi/tietopalvelut/avoin_data
+TraFi's open data of vehicle information can be found from [Open data at Trafi](https://www.trafi.fi/tietopalvelut/avoin_data). 
+Link points to Finnish version of the page which has (at the time of writing) newer data.
 
 # License
 
 Application: MIT
 
-TraFi's data: CC 4.0 (http://www.trafi.fi/tietopalvelut/avoin_data/avoimen_datan_lisenssi)
+TraFi's open data: CC 4.0 (https://www.trafi.fi/en/information_services/open_data/open_data_licence)
